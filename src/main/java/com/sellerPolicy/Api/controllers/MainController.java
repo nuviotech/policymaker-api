@@ -3,6 +3,7 @@ package com.sellerPolicy.Api.controllers;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -27,10 +28,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sellerPolicy.Api.entity.Categorys;
 import com.sellerPolicy.Api.entity.MarketPlace;
+import com.sellerPolicy.Api.entity.Product;
+import com.sellerPolicy.Api.entity.ProductReviews;
 import com.sellerPolicy.Api.entity.Seller;
 import com.sellerPolicy.Api.repo.CategorysRepository;
 import com.sellerPolicy.Api.repo.MarketPlacerRepository;
+import com.sellerPolicy.Api.repo.ProductRepository;
+import com.sellerPolicy.Api.repo.ProductReviewRepository;
 import com.sellerPolicy.Api.repo.SellerRepository;
+
+import HelperClasses.Helper;
 
 @RestController
 public class MainController {
@@ -41,7 +48,10 @@ public class MainController {
 	MarketPlacerRepository marketPlacerRepository;
 	@Autowired
 	CategorysRepository  categorysRepository;
-	
+	@Autowired
+	ProductRepository productRepository;
+	@Autowired
+	ProductReviewRepository productReviewRepository;
 	
 	@GetMapping("/seller/{category}")
 	public String searchSeller(@PathVariable String category) {
@@ -118,6 +128,49 @@ public class MainController {
 			System.out.println(str);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return str;
+	}
+	
+	@GetMapping("/getProductRefId/{catId}/{title}/{hsnId}")
+	public String getProductRefId(@PathVariable String catId,@PathVariable String title,@PathVariable String hsnId) {
+		String productRefId="none";
+		System.out.println(catId+" " +title+" "+hsnId);
+		try {
+			Product p=new Product();
+			productRefId="PRD_RF_ID_"+Helper.getRandomNumber();
+			p.setProduct_ref_id(productRefId);
+			p.setCategoryId(catId);
+			p.setCreatedDateTime(new Date());
+			p.setHsnNo(hsnId);
+			p.setTitle(title);
+			productRepository.save(p);
+		}catch(Exception e) {
+			productRefId="none";
+			e.printStackTrace();
+		}
+		return productRefId;
+	}
+	
+	@GetMapping("/getReviews/{prd_ref_id}")
+	public String  getProductReviews(@PathVariable String prd_ref_id){
+		ObjectMapper om=new ObjectMapper();
+		String str="wrong product ref id !!!";
+		try {
+		List<ProductReviews> prList=new ArrayList<>();
+		Product p=productRepository.getById(prd_ref_id);
+		for(ProductReviews pr:p.getProductReviews()) {
+			ProductReviews productReview=new ProductReviews();
+			productReview.setReviwerId(pr.getReviwerId());
+			productReview.setFeedback(pr.getFeedback());
+			productReview.setImagUrls(pr.getImagUrls());
+			productReview.setDate(pr.getDate());
+			productReview.setRating(pr.getRating());
+			prList.add(productReview);
+		}
+		str= om.writeValueAsString(prList);
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return str;
