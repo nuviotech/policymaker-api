@@ -26,11 +26,9 @@ public class Categorys {
 	private String catergoryName;
 	
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST ,mappedBy = "categorysList")
-	@JsonManagedReference
 	List<Seller> sellerList=new ArrayList<>();
 	
 	@ManyToMany(mappedBy = "categorysListM")
-	
 	List<MarketPlace> marketplaceList=new ArrayList<>();
 	
 	public Categorys() {}

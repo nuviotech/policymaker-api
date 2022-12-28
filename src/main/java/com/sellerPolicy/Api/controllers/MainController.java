@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -176,6 +177,20 @@ public class MainController {
 		return str;
 	}
 	
-	
-		
+	@PostMapping("/addReviews/{product_ref_id}")
+	public String addProductReviews(@RequestBody ProductReviews productReviews,@PathVariable String product_ref_id) {
+		System.out.println("hello "+product_ref_id);
+		Product p= productRepository.getById(product_ref_id);
+		if(p==null) {
+			return "none";
+		}else {
+			productReviews.setDate(new Date());
+			productReviews.setProduct(p);
+			List<ProductReviews> prList=p.getProductReviews();
+			prList.add(productReviews);
+			p.setProductReviews(prList);
+			productReviewRepository.save(productReviews);
+			return "done";
+		}
+	}	
 }
