@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="product_reviews")
@@ -19,7 +20,7 @@ public class ProductReviews {
 	int reviewId;
 	
 	@Column(name="Rating")
-	int rating;
+	String rating;
 	
 	@Column(name="Feedback",length=500)
 	String feedback;
@@ -33,6 +34,8 @@ public class ProductReviews {
 	@Column(name="Reviwer_id")
 	String reviwerId;
 	
+	
+	
 	@ManyToOne
     Product product;
 
@@ -44,11 +47,11 @@ public class ProductReviews {
 		this.reviewId = reviewId;
 	}
 
-	public int getRating() {
+	public String getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(String rating) {
 		this.rating = rating;
 	}
 
@@ -91,4 +94,7 @@ public class ProductReviews {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	
+	
 }
