@@ -23,7 +23,11 @@ public class Categorys {
 	private int categoryId;
 	
 	@Column(name="Category_name")
-	private String catergoryName;
+	private String name;
+	
+	String slug;
+	String created_at;
+	String updated_at;
 	
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST ,mappedBy = "categorysList")
 	List<Seller> sellerList=new ArrayList<>();
@@ -42,11 +46,11 @@ public class Categorys {
 	}
 
 	public String getCatergoryName() {
-		return catergoryName;
+		return name;
 	}
 
 	public void setCatergoryName(String catergoryName) {
-		this.catergoryName = catergoryName;
+		this.name = catergoryName;
 	}
 /*
 	public Seller getSeller() {
@@ -72,6 +76,44 @@ public class Categorys {
 
 	public void setMarketplaceList(List<MarketPlace> marketplaceList) {
 		this.marketplaceList = marketplaceList;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public String getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(String created_at) {
+		this.created_at = created_at;
+	}
+
+	public String getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(String updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	@Override
+	public String toString() {
+		return "{\"categoryId\":" + categoryId + ", \"name\":\"" + name + "\", \"slug\":\"" + slug + "\", \"created_at\":\""
+				+ created_at + "\", \"updated_at\":\"" + updated_at + "\"}";
 	}
 	
 	

@@ -8,6 +8,7 @@ public class SellerPoliclyApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SellerPoliclyApiApplication.class, args);
+	
 	}
 
 }

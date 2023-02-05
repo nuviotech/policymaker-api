@@ -6,6 +6,6 @@ import com.sellerPolicy.Api.entity.Categorys;
 
 
 public interface CategorysRepository extends JpaRepository<Categorys, Integer> {
-	public Categorys findByCatergoryName(String categoryName);
+	public Categorys findByName(String categoryName);
 	
 }

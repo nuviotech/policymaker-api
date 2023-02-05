@@ -263,8 +263,6 @@ public class Seller {
 		this.signUpType = signUpType;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Seller [id=" +SellerID+ ", firstName=" + firstName + ", lastName=" + lastName + ", emailAddr=" + emailAddr
@@ -272,8 +270,5 @@ public class Seller {
 				+ bussinessAddr + ", pincode=" + pincode + ", GstNo=" + GstNo + ", password=" + password + ", category="
 				 + "]";
 	}
-	
-	
-	
 	
 }
