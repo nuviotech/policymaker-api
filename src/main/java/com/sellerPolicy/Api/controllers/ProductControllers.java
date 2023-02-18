@@ -13,7 +13,7 @@ import com.sellerPolicy.Api.entity.Categorys;
 import com.sellerPolicy.Api.repo.BrandRepository;
 import com.sellerPolicy.Api.repo.CategorysRepository;
 
-@CrossOrigin(origins = "http://localhost:3000/", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:3000/","https://nuvio.in/","https://manageecom.com:8081/","https://manageecom.com:8083/","https://manageecom.com:8084/"}, maxAge = 3600)
 @RestController
 public class ProductControllers {
 	@Autowired
