@@ -41,7 +41,6 @@ import com.sellerPolicy.Api.repo.SellerRepository;
 
 import HelperClasses.Helper;
 
-@CrossOrigin(origins = {"http://localhost:3000/","https://nuvio.in/","https://manageecom.com:8081/","https://manageecom.com:8083/","https://manageecom.com:8084/"}, maxAge = 3600)
 @RestController
 public class MainController {
 	
