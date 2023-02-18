@@ -17,8 +17,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.App.webApp.service.LoginUser;
+
+//import com.App.webApp.service.LoginUser;
+
 @Entity
-public class MarketPlace {
+public class MarketPlace implements LoginUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	int marketPlaceID;
@@ -65,6 +69,8 @@ public class MarketPlace {
 	
 	String country;
 	String state;
+	String role;
+	String type;
 	
 	/*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "seller")
 	private List<Categorys> categorysList = new ArrayList<>();*/
@@ -217,6 +223,22 @@ public class MarketPlace {
 
 	public void setCategorysList(List<Categorys> categorysList) {
 		this.categorysListM = categorysList;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }
