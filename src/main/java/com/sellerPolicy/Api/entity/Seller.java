@@ -70,6 +70,7 @@ public class Seller implements LoginUser{
 	String phoneNumber;
 	
 	String country;
+	int is_active;//1 for active and 0 for deactive
 	String state;
 	String role;
 	String type;
@@ -79,6 +80,7 @@ public class Seller implements LoginUser{
 	
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name="seller_categorys")
+    @JsonManagedReference
 	List<Categorys> categorysList =new ArrayList<>();
 	
 	//String categorysId;
@@ -170,7 +172,8 @@ public class Seller implements LoginUser{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
+	
 
 /*
 	public List<Categorys> getCategorysList() {
@@ -185,8 +188,23 @@ public class Seller implements LoginUser{
 
 
 
+	
+
+
 	public List<Categorys> getCategorysList() {
 		return categorysList;
+	}
+
+
+
+	public int getIs_active() {
+		return is_active;
+	}
+
+
+
+	public void setIs_active(int is_active) {
+		this.is_active = is_active;
 	}
 
 
@@ -292,10 +310,11 @@ public class Seller implements LoginUser{
 
 	@Override
 	public String toString() {
-		return "Seller [id=" +SellerID+ ", firstName=" + firstName + ", lastName=" + lastName + ", emailAddr=" + emailAddr
-				+ ", nameOfCompany=" + nameOfCompany + ", typeOfCompany=" + typeOfCompany + ", bussinessAddr="
-				+ bussinessAddr + ", pincode=" + pincode + ", GstNo=" + GstNo + ", password=" + password + ", category="
-				 + "]";
+		return "{ \"id\" : \"" +SellerID+ "\", \"firstName\" : \"" + firstName + "\", \"lastName\" : \"" + lastName + "\", \"emailAddr\" : \"" + emailAddr
+				+ "\", \"nameOfCompany\" : \"" + nameOfCompany + "\", \" typeOfCompany \" : \"" + typeOfCompany + "\", \"bussinessAddr\" : \" "
+				+ bussinessAddr + "\", \"pincode\": \" " + pincode + "\", \" GstNo\" : \"" + GstNo + "\""
+				 + "\" is_active \": \""+ is_active +"\"}";
+		
 	}
 	
 }

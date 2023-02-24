@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -30,9 +31,11 @@ public class Categorys {
 	String updated_at;
 	
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST ,mappedBy = "categorysList")
+    @JsonBackReference
 	List<Seller> sellerList=new ArrayList<>();
 	
 	@ManyToMany(mappedBy = "categorysListM")
+	@JsonBackReference
 	List<MarketPlace> marketplaceList=new ArrayList<>();
 	
 	public Categorys() {}

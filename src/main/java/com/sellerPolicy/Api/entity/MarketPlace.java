@@ -18,6 +18,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.App.webApp.service.LoginUser;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 //import com.App.webApp.service.LoginUser;
 
@@ -68,6 +69,7 @@ public class MarketPlace implements LoginUser {
 	String phoneNumber;
 	
 	String country;
+	int is_active;//1 for active and 0 for deactive
 	String state;
 	String role;
 	String type;
@@ -77,6 +79,7 @@ public class MarketPlace implements LoginUser {
 	
 	@ManyToMany
 	@JoinTable(name="marketplace_categorys")
+	@JsonManagedReference
 	List<Categorys> categorysListM =new ArrayList<>();
 	
 	//String categorysId;
@@ -207,6 +210,16 @@ public class MarketPlace implements LoginUser {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	
+
+	public int getIs_active() {
+		return is_active;
+	}
+
+	public void setIs_active(int is_active) {
+		this.is_active = is_active;
 	}
 
 	/*public String getCategorysId() {

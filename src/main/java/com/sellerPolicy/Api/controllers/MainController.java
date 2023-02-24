@@ -10,6 +10,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +44,8 @@ import com.sellerPolicy.Api.repo.SellerRepository;
 
 import HelperClasses.Helper;
 
+
+@CrossOrigin
 @RestController
 public class MainController {
 	
@@ -198,7 +203,7 @@ public class MainController {
 	
 	@PostMapping("/addReviews/{product_ref_id}")
 	public String addProductReviews(@RequestBody ProductReviews productReviews,@PathVariable String product_ref_id) {
-		System.out.println("hello "+product_ref_id);
+		
 		Product p= productRepository.getById(product_ref_id);
 		if(p==null) {
 			return "none";
@@ -211,5 +216,35 @@ public class MainController {
 			productReviewRepository.save(productReviews);
 			return "done";
 		}
-	}	
+	}
+	
+	@GetMapping("/getSellers")
+	public List getAllSellersDetails(@RequestParam("page") int page) {
+		Pageable pageble = PageRequest.of(page, 5);
+		List<Seller> sellers=new ArrayList<>();
+		for(Seller s: sellerRepository.findAll(pageble)) {
+			s.setPassword("NONE");
+			sellers.add(s);
+		}
+		return sellers;
+	}
+	
+	@GetMapping("/getTotalCountOfSeller")
+	public String getTotalCountOfSeller() {
+		int num=sellerRepository.findAll().size();
+		return ""+num;
+	}
+	
+	@GetMapping("/activeDeactiveSeller")
+	public String activeDeactiveSeller(@RequestParam("idsr") int id,@RequestParam("action") String action) {
+		Seller seller=sellerRepository.findById(id).get();
+		if(action.equals("Active")) {
+			seller.setIs_active(1);
+		}else if(action.equals("Deactive")) {
+			seller.setIs_active(0);
+		}
+		sellerRepository.save(seller);
+		return "done";
+	}
+	
 }
