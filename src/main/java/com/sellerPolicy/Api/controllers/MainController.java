@@ -13,6 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +29,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,13 +39,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sellerPolicy.Api.entity.Categorys;
 import com.sellerPolicy.Api.entity.MarketPlace;
 import com.sellerPolicy.Api.entity.Product;
 import com.sellerPolicy.Api.entity.ProductReviews;
 import com.sellerPolicy.Api.entity.Seller;
+import com.sellerPolicy.Api.entity.User;
+import com.sellerPolicy.Api.jwtAuthentication.UserCustomConfigService;
+import com.sellerPolicy.Api.jwtHelper.JwtUtil;
 import com.sellerPolicy.Api.repo.CategorysRepository;
 import com.sellerPolicy.Api.repo.MarketPlacerRepository;
 import com.sellerPolicy.Api.repo.ProductRepository;
@@ -52,6 +63,14 @@ import HelperClasses.Helper;
 @CrossOrigin(origins = {"http://localhost:3000/","https://nuvio.in/","https://manageecom.com:8081/","https://manageecom.com:8083/","https://manageecom.com:8084/"}, maxAge = 3600)
 @RestController
 public class MainController {
+	@Autowired
+	private UserCustomConfigService userCustomConfigService;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Autowired
+	private JwtUtil jwtUtil;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
 	SellerRepository sellerRepository;
@@ -99,7 +118,6 @@ public class MainController {
 			e.printStackTrace();
 		}
 		return str;
-
 		
 	}
 	
@@ -176,6 +194,7 @@ public class MainController {
 	public String getAllProducts() {
 		return "[{\"id\":100,\"title\":\"This is my first product\",\"is_featured\":null,\"is_hot\":null,\"price\":640.5,\"sale_price\":null,\"vendor\":\"ROBERT’S STORE\",\"review\":5,\"is_out_of_stock\":null,\"depot\":80,\"inventory\":100,\"is_active\":true,\"is_sale\":false,\"slug\":null,\"created_at\":\"2020-03-14T10:34:56.811Z\",\"updated_at\":\"2020-03-14T10:39:05.919Z\",\"variants\":[],\"images\":[{\"id\":1,\"name\":\"1a.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"114071762b454d09aca0e0a95ad3885d\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":8.78,\"url\":\"/uploads/114071762b454d09aca0e0a95ad3885d.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-14T10:39:17.429Z\",\"updated_at\":\"2020-03-14T10:39:17.429Z\"},{\"id\":2,\"name\":\"1c.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"f73c23a548694e8fb0435aa0644cc570\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":10.88,\"url\":\"/uploads/f73c23a548694e8fb0435aa0644cc570.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-14T10:39:17.444Z\",\"updated_at\":\"2020-03-14T10:39:17.444Z\"},{\"id\":3,\"name\":\"1b.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"af86c8d6136b4bb8805354995c3e6ed8\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":4.5,\"url\":\"/uploads/af86c8d6136b4bb8805354995c3e6ed8.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-14T10:39:17.458Z\",\"updated_at\":\"2020-03-14T10:39:17.458Z\"}],\"thumbnail\":{\"id\":4,\"name\":\"1a.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"5a1586c7d04646fda4575e5af5c16c30\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":8.78,\"url\":\"/uploads/5a1586c7d04646fda4575e5af5c16c30.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-14T10:41:20.970Z\",\"updated_at\":\"2020-03-14T10:41:20.970Z\"},\"product_categories\":[{\"id\":7,\"name\":\"Phones & Accessories\",\"slug\":\"phones-and-accessories\",\"created_at\":\"2020-03-14T10:26:54.185Z\",\"updated_at\":\"2020-03-14T10:26:54.185Z\"}],\"brands\":[{\"id\":1,\"name\":\"Apple\",\"slug\":\"apple\",\"created_at\":\"2020-03-14T10:30:03.468Z\",\"updated_at\":\"2020-03-14T10:30:31.584Z\"}],\"collections\":[{\"id\":7,\"name\":\"Shop Top Deals Super Hot Today\",\"slug\":\"shop-top-deals-super-hot-today\",\"created_at\":\"2020-04-12T06:34:11.408Z\",\"updated_at\":\"2020-08-05T09:09:03.737Z\"},{\"id\":13,\"name\":\"Technology Good Price\",\"slug\":\"technology-good-price\",\"created_at\":\"2020-04-18T06:46:54.898Z\",\"updated_at\":\"2020-08-05T10:41:39.751Z\"},{\"id\":9,\"name\":\"New Arrivals Products\",\"slug\":\"new-arrivals-products\",\"created_at\":\"2020-04-12T06:36:23.687Z\",\"updated_at\":\"2020-08-05T08:25:55.008Z\"},{\"id\":20,\"name\":\"Customer Bought Products\",\"slug\":\"customer-bought-products\",\"created_at\":\"2020-04-19T08:37:10.179Z\",\"updated_at\":\"2020-07-31T09:10:17.080Z\"}],\"stores\":[{\"id\":1,\"name\":\"Global Office\",\"slug\":\"global-office\",\"address\":\"325 Orchard Str, New York, United States (US)\",\"phone\":\" (+053) 77-637-3300\",\"created_at\":\"2021-02-15T16:10:34.972Z\",\"updated_at\":\"2021-02-15T16:13:24.951Z\",\"thumbnail\":{\"id\":369,\"name\":\"vendor-150x150.jpg\",\"alternativeText\":\"\",\"caption\":\"\",\"width\":150,\"height\":150,\"formats\":null,\"hash\":\"vendor_150x150_e7c381334d\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":4.22,\"url\":\"/uploads/vendor_150x150_e7c381334d.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2021-02-15T16:13:22.005Z\",\"updated_at\":\"2021-02-15T16:13:22.020Z\"}}]},{\"id\":101,\"title\":\"This is my second product\",\"is_featured\":false,\"is_hot\":false,\"price\":150,\"sale_price\":null,\"vendor\":\"Young Shop\",\"review\":4,\"is_out_of_stock\":false,\"depot\":80,\"inventory\":100,\"is_active\":true,\"is_sale\":false,\"slug\":null,\"created_at\":\"2020-03-15T05:47:28.790Z\",\"updated_at\":\"2020-03-15T06:03:15.417Z\",\"variants\":[],\"images\":[{\"id\":6,\"name\":\"1a.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"0e9b9750228b421aafe324f6f9b36304\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":8.78,\"url\":\"/uploads/0e9b9750228b421aafe324f6f9b36304.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-15T05:47:28.833Z\",\"updated_at\":\"2020-03-15T05:47:28.833Z\"},{\"id\":7,\"name\":\"1b.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"99cdb1e5a2874365bab8f49ea1fc7070\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":4.5,\"url\":\"/uploads/99cdb1e5a2874365bab8f49ea1fc7070.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-15T05:47:28.857Z\",\"updated_at\":\"2020-03-15T05:47:28.857Z\"},{\"id\":8,\"name\":\"1c.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"2ed1134b99b146feb6245f8e07201ec8\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":10.88,\"url\":\"/uploads/2ed1134b99b146feb6245f8e07201ec8.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-15T05:47:28.869Z\",\"updated_at\":\"2020-03-15T05:47:28.869Z\"}],\"thumbnail\":{\"id\":5,\"name\":\"1.jpg\",\"alternativeText\":null,\"caption\":null,\"width\":null,\"height\":null,\"formats\":null,\"hash\":\"4c07bca3f13444688823a1c099410884\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":9.04,\"url\":\"/uploads/4c07bca3f13444688823a1c099410884.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2020-03-15T05:47:28.819Z\",\"updated_at\":\"2020-03-15T05:47:28.819Z\"},\"product_categories\":[{\"id\":7,\"name\":\"Phones & Accessories\",\"slug\":\"phones-and-accessories\",\"created_at\":\"2020-03-14T10:26:54.185Z\",\"updated_at\":\"2020-03-14T10:26:54.185Z\"}],\"brands\":[{\"id\":1,\"name\":\"Apple\",\"slug\":\"apple\",\"created_at\":\"2020-03-14T10:30:03.468Z\",\"updated_at\":\"2020-03-14T10:30:31.584Z\"}],\"collections\":[{\"id\":7,\"name\":\"Shop Top Deals Super Hot Today\",\"slug\":\"shop-top-deals-super-hot-today\",\"created_at\":\"2020-04-12T06:34:11.408Z\",\"updated_at\":\"2020-08-05T09:09:03.737Z\"},{\"id\":9,\"name\":\"New Arrivals Products\",\"slug\":\"new-arrivals-products\",\"created_at\":\"2020-04-12T06:36:23.687Z\",\"updated_at\":\"2020-08-05T08:25:55.008Z\"}],\"stores\":[{\"id\":1,\"name\":\"Global Office\",\"slug\":\"global-office\",\"address\":\"325 Orchard Str, New York, United States (US)\",\"phone\":\" (+053) 77-637-3300\",\"created_at\":\"2021-02-15T16:10:34.972Z\",\"updated_at\":\"2021-02-15T16:13:24.951Z\",\"thumbnail\":{\"id\":369,\"name\":\"vendor-150x150.jpg\",\"alternativeText\":\"\",\"caption\":\"\",\"width\":150,\"height\":150,\"formats\":null,\"hash\":\"vendor_150x150_e7c381334d\",\"ext\":\".jpg\",\"mime\":\"image/jpeg\",\"size\":4.22,\"url\":\"/uploads/vendor_150x150_e7c381334d.jpg\",\"previewUrl\":null,\"provider\":\"local\",\"provider_metadata\":null,\"created_at\":\"2021-02-15T16:13:22.005Z\",\"updated_at\":\"2021-02-15T16:13:22.020Z\"}}]}]";
 	}
+	
 	@GetMapping("products/count")
 	public int getCount(){
 		return 2;
@@ -251,4 +270,53 @@ public class MainController {
 		return "done";
 	}
 	
+	
+	
+	//login process for get the token for authentication api
+			@PostMapping("/login")
+			public String generateToken(@RequestBody User u) throws Exception{
+				MarketPlace user=new MarketPlace();
+				user.setPassword(u.getPassword());
+				user.setEmailAddr(u.getEmail());
+				System.out.println("I am here");
+				try {
+					System.out.println("Marketplace login details "+user.getEmailAddr()+" | "+user.getPassword());
+					this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmailAddr() , user.getPassword()));
+					
+				}catch(UsernameNotFoundException e) {
+					e.printStackTrace();
+					throw new Exception("### Invalid username!!");
+				}catch(BadCredentialsException e){
+					e.printStackTrace();
+					return "{\"message\" : \"Invalid email or password..\",\"status\":1}";
+					//throw new Exception("### Bad credentials!!");
+				}
+				//generate the token
+				UserDetails userDetails= this.userCustomConfigService.loadUserByUsername(user.getEmailAddr());
+				String token=this.jwtUtil.generateToken(userDetails);
+				System.out.println("Login success");
+				return "{ \"Token\" : \""+token+"\", \"status\":0}";
+
+			}
+			
+			
+			@GetMapping("/getMarketplaceDetails")
+			public String getUserDatails(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
+				String email=jwtUtil.getUsernameFromToken(jwtToken.substring(7));
+				System.out.println("User m email : "+email);
+				MarketPlace user=marketPlacerRepository.findByEmailAddr(email);
+				System.out.println("Marketplace "+user.getFirstName() +" "+user.getLastName());
+				user.setPassword(null);
+				
+				ObjectMapper mapper=new ObjectMapper();
+				try {
+				    String json=mapper.writeValueAsString(user);
+				//    String json2=mapper.writeValueAsString(orders);
+					return json;
+
+				}catch(Exception e) {
+					System.out.println("error : "+e.getMessage());
+					return e.getMessage();
+				}
+			}
 }
