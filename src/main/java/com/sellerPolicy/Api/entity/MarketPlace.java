@@ -77,6 +77,11 @@ public class MarketPlace implements LoginUser {
 	/*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "seller")
 	private List<Categorys> categorysList = new ArrayList<>();*/
 	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@JoinTable(name="marketplace_seller")
+	@JsonManagedReference
+	List<Seller> activeSellers=new ArrayList<>();
+	
 	@ManyToMany
 	@JoinTable(name="marketplace_categorys")
 	@JsonManagedReference
@@ -244,6 +249,16 @@ public class MarketPlace implements LoginUser {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	
+
+	public List<Seller> getActiveSellers() {
+		return activeSellers;
+	}
+
+	public void setActiveSellers(List<Seller> activeSellers) {
+		this.activeSellers = activeSellers;
 	}
 
 	public String getType() {

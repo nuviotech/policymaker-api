@@ -270,6 +270,26 @@ public class MainController {
 		return "done";
 	}
 	
+	@GetMapping("/activeDeactiveSellerByMarketplace")
+	public String activeDeactiveSellerByMarketplace(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,@RequestParam("idsr") int id,@RequestParam("action") String action) {
+		System.out.println("I am here");
+		MarketPlace marketplace=marketPlacerRepository.findByEmailAddr(jwtUtil.getUsernameFromToken(token.substring(7)));
+		Seller seller=sellerRepository.findById(id).get();
+		if(action.equals("Active")) {
+			if(marketplace.getActiveSellers().contains(seller)) {
+				System.out.println("return 1");
+				return "1";
+			}else {
+				marketplace.getActiveSellers().add(seller);
+			}
+		}else if(action.equals("Deactive")) {
+			marketplace.getActiveSellers().remove(seller);
+		}
+		marketPlacerRepository.save(marketplace);
+		System.out.println("return 0");
+		return "0";
+	}
+	
 	
 	
 	//login process for get the token for authentication api
