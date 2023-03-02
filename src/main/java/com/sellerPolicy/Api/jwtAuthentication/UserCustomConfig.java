@@ -7,13 +7,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.App.webApp.service.User;
 import com.sellerPolicy.Api.entity.MarketPlace;
 
 
 public class UserCustomConfig implements UserDetails {
-	private MarketPlace  user;
-
-	public UserCustomConfig(MarketPlace u) {
+	//private MarketPlace  user;
+	private User user;
+	
+	public UserCustomConfig(User u) {
 		super();
 		this.user = u;
 	}
@@ -35,7 +37,8 @@ public class UserCustomConfig implements UserDetails {
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return user.getEmailAddr() ;
+		//return user.getEmailAddr() ;
+		return user.getUserName();
 	}
 
 	@Override
