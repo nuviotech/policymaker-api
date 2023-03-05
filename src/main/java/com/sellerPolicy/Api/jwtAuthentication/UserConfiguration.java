@@ -61,7 +61,8 @@ public class UserConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/login").permitAll()
 			.antMatchers("/t").permitAll()
 			//will be remove only testing purpose
-			
+			.antMatchers("/product-categories").permitAll()
+			.antMatchers("/brands").permitAll()
 			//*************************************************
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
 			.anyRequest().authenticated()

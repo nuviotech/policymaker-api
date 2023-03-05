@@ -34,7 +34,10 @@ public class Seller implements LoginUser{
 	@NotBlank(message = "first name not be blank!!")
 	@Size(max = 30, min = 1, message = "first name must be greterthan 1 character or lessthan 30 character")
 	String firstName;
-
+	
+    //
+	String apiEndpoint; 
+	
 	@NotBlank(message = "second name not be blank!!")
 	@Size(max = 30, min = 1, message = "name must be greterthan 1 character or lessthan 30 character")
 	String lastName;
@@ -67,6 +70,7 @@ public class Seller implements LoginUser{
 	String passwordConfirm;
 	@Transient
 	String signUpType;
+	
 
 	@NotBlank(message = "This field is required !!")
 	@Pattern(message = "Please enter valid phone number", regexp = "^(\\+91[\\-\\s]?)?[0]?(91)?[789]\\d{9}$")
@@ -268,25 +272,15 @@ public class Seller implements LoginUser{
 	public void setState(String state) {
 		this.state = state;
 	}
-
-
 	public String getComponyUrl() {
 		return componyUrl;
 	}
-
-
-
 	public void setComponyUrl(String componyUrl) {
 		this.componyUrl = componyUrl;
 	}
-
-
-
 	public String getSignUpType() {
 		return signUpType;
 	}
-
-
 
 	public void setSignUpType(String signUpType) {
 		this.signUpType = signUpType;
@@ -295,21 +289,12 @@ public class Seller implements LoginUser{
 	public String getRole() {
 		return role;
 	}
-
-
-
 	public void setRole(String role) {
 		this.role = role;
 	}
-
-
-
 	public String getType() {
 		return type;
 	}
-
-
-
 	public void setType(String type) {
 		this.type = type;
 	}
