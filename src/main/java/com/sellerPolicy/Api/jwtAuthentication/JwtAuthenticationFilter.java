@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		String fullToken = request.getHeader("Authorization");
 		String userName=null;
 		String token=null;
-		System.out.println("Token : "+fullToken);
 		//token is empty or not and check the token format here...
 		if(fullToken!=null && fullToken.startsWith("Bearer ")) {
 			//(bearer abcdefghijk) so actual token start from 7 index 
