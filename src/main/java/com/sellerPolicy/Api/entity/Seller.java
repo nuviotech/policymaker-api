@@ -99,20 +99,12 @@ public class Seller implements LoginUser{
 
 	public Seller() {}
 
-
-
 	public int getSellerID() {
 		return SellerID;
 	}
-
-
-
 	public void setSellerID(int sellerID) {
 		SellerID = sellerID;
 	}
-
-
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -219,8 +211,6 @@ public class Seller implements LoginUser{
 		this.is_active = is_active;
 	}
 
-
-
 	public void setCategorysList(List<Categorys> categorysList) {
 		this.categorysList = categorysList;
 	}
@@ -298,13 +288,22 @@ public class Seller implements LoginUser{
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+
+	public String getApiEndpoint() {
+		return apiEndpoint;
+	}
+
+	public void setApiEndpoint(String apiEndpoint) {
+		this.apiEndpoint = apiEndpoint;
+	}
 
 	@Override
 	public String toString() {
 		return "{ \"id\" : \"" +SellerID+ "\", \"firstName\" : \"" + firstName + "\", \"lastName\" : \"" + lastName + "\", \"emailAddr\" : \"" + emailAddr
 				+ "\", \"nameOfCompany\" : \"" + nameOfCompany + "\", \" typeOfCompany \" : \"" + typeOfCompany + "\", \"bussinessAddr\" : \" "
 				+ bussinessAddr + "\", \"pincode\": \" " + pincode + "\", \" GstNo\" : \"" + GstNo + "\""
-				+ "\" is_active \": \""+ is_active +"\"}";
+				+ "\" is_active \": \""+ is_active +"\", \"api_endpoint\":\""+apiEndpoint+"\"  }";
 
 	}
 
