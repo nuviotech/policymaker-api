@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -15,12 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,8 +41,6 @@ import com.sellerPolicy.Api.entity.Product;
 import com.sellerPolicy.Api.entity.ProductReviews;
 import com.sellerPolicy.Api.entity.Seller;
 import com.sellerPolicy.Api.entity.User;
-import com.sellerPolicy.Api.jwtAuthentication.UserCustomConfigService;
-import com.sellerPolicy.Api.jwtHelper.JwtUtil;
 import com.sellerPolicy.Api.repo.CategorysRepository;
 import com.sellerPolicy.Api.repo.MarketPlacerRepository;
 import com.sellerPolicy.Api.repo.MarketplaceSellerActivityRepo;
@@ -62,14 +55,7 @@ import ch.qos.logback.core.joran.action.Action;
 @CrossOrigin
 @RestController
 public class MainController {
-	@Autowired
-	private UserCustomConfigService userCustomConfigService;
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	@Autowired
-	private JwtUtil jwtUtil;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 
 	@Autowired
 	SellerRepository sellerRepository;
@@ -83,7 +69,6 @@ public class MainController {
 	ProductReviewRepository productReviewRepository;
 	@Autowired
 	MarketplaceSellerActivityRepo marketplaceSellerActivityRepo;
-	com.App.webApp.service.User defaultUser=new com.App.webApp.service.User();
 
 
 	@GetMapping("/seller/{category}")
@@ -124,12 +109,9 @@ public class MainController {
 
 	}
 
-	@GetMapping("/marketplace/{category}")
-	public String searchMarketplace(@PathVariable String category) {
-
-		System.out.println("Hello i am on.. "+category);
+	@PostMapping("/marketplace")
+	public String searchMarketplace(@RequestParam("category") String category) {
 		Categorys categorys=categorysRepository.findByName(category);
-
 
 		ObjectMapper om=new ObjectMapper();
 		String str="Nan";
@@ -163,13 +145,13 @@ public class MainController {
 		return str;
 	}
 
-	@GetMapping("/getProductRefId/{catId}/{title}/{hsnId}")
-	public String getProductRefId(@PathVariable String catId,@PathVariable String title,@PathVariable String hsnId) {
-		String productRefId="none";
+	@PostMapping("/getProductRefId")
+	public String getProductRefId(@RequestParam("catId") String catId,@RequestParam("title") String title,@RequestParam("hsnId") String hsnId) {
+		String productRefId=null;
 		System.out.println(catId+" " +title+" "+hsnId);
 		try {
 			Product p=new Product();
-			productRefId="PRD_RF_ID_"+Helper.getRandomNumber();
+			productRefId = UUID.randomUUID().toString().replaceAll("-", "");
 			p.setProduct_ref_id(productRefId);
 			p.setCategoryId(catId);
 			p.setCreatedDateTime(new Date());
@@ -180,10 +162,11 @@ public class MainController {
 			productRefId="none";
 			e.printStackTrace();
 		}
+		System.out.println("id : "+productRefId);
 		return productRefId;
 	}
-
-	@GetMapping("products/{pid}")
+/*
+	@PostMapping("products/{pid}")
 	public String getProduct(@PathVariable Integer pid){
 		System.out.println("hello "+pid);
 		if(pid==100)
@@ -243,10 +226,10 @@ public class MainController {
 			return "done";
 		}
 	}
-
-	@GetMapping("/getSellers")
-	public List getAllSellersDetails(@RequestParam("page") int page) {
-		Pageable pageble = PageRequest.of(page, 5);
+*/
+	@PostMapping("/getAllSeller")
+	public List getAllSellersDetails(@RequestParam("page") int page,@RequestParam("numOfrecord") int numOfRecord) {
+		Pageable pageble = PageRequest.of(page, numOfRecord);
 		List<Seller> sellers=new ArrayList<>();
 		for(Seller s: sellerRepository.findAll(pageble)) {
 			s.setPassword("NONE");
@@ -256,11 +239,19 @@ public class MainController {
 	}
 
 	@GetMapping("/getTotalCountOfSeller")
-	public String getTotalCountOfSeller() {
+	public int getTotalCountOfSeller() {
 		int num=sellerRepository.findAll().size();
-		return ""+num;
+		return num;
 	}
-
+	
+	@GetMapping("/getSellerById")
+	public Seller getTheSellerByProvidedId(@RequestParam("id") String id) {
+		System.out.println("id : "+id);
+		Seller seller=sellerRepository.findByEmailAddr(id);
+		return seller;
+	}
+	
+	/*
 	@GetMapping("/activeDeactiveSeller")
 	public String activeDeactiveSeller(@RequestParam("idsr") int id,@RequestParam("action") String action) {
 		Seller seller=sellerRepository.findById(id).get();
@@ -307,7 +298,7 @@ public class MainController {
 		/*User user=new MarketPlace();
 				user.setPassword(u.getPassword());
 				user.setEmailAddr(u.getEmail());
-		 */
+		 
 		com.App.webApp.service.User user =new com.App.webApp.service.User();
 		user.setUserName(u.getEmail());
 		user.setPassword(u.getPassword());
@@ -340,7 +331,6 @@ public class MainController {
 		//System.out.println("Marketplace "+user.getFirstName() +" "+user.getLastName());
 		//for testing purpose
 		//*******************
-
 		if(!email.equals("Admin@gmail.com")) {
 			return "";
 		}
@@ -350,10 +340,9 @@ public class MainController {
 		try {
 			String json=mapper.writeValueAsString(defaultUser);
 			return json;
-
 		}catch(Exception e) {
 			System.out.println("error : "+e.getMessage());
 			return e.getMessage();
 		}
-	}
+	}*/
 }
