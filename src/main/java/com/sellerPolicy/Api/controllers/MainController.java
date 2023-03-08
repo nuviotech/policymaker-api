@@ -113,8 +113,8 @@ public class MainController {
 
 	}
 
-	@GetMapping("/marketplace/{category}")
-	public String searchMarketplace(@PathVariable String category) {
+	@PostMapping("/marketplace")
+	public String searchMarketplace(@RequestParam("category") String category) {
 		Categorys categorys=categorysRepository.findByName(category);
 
 		ObjectMapper om=new ObjectMapper();
@@ -149,7 +149,7 @@ public class MainController {
 		return str;
 	}
 
-	@GetMapping("/getProductRefId")
+	@PostMapping("/getProductRefId")
 	public String getProductRefId(@RequestParam("catId") String catId,@RequestParam("title") String title,@RequestParam("hsnId") String hsnId) {
 		String productRefId=null;
 		System.out.println(catId+" " +title+" "+hsnId);
@@ -169,8 +169,8 @@ public class MainController {
 		System.out.println("id : "+productRefId);
 		return productRefId;
 	}
-
-	@GetMapping("products/{pid}")
+/*
+	@PostMapping("products/{pid}")
 	public String getProduct(@PathVariable Integer pid){
 		System.out.println("hello "+pid);
 		if(pid==100)
@@ -230,8 +230,8 @@ public class MainController {
 			return "done";
 		}
 	}
-
-	@GetMapping("/getAllSeller")
+*/
+	@PostMapping("/getAllSeller")
 	public List getAllSellersDetails(@RequestParam("page") int page,@RequestParam("numOfrecord") int numOfRecord) {
 		Pageable pageble = PageRequest.of(page, numOfRecord);
 		List<Seller> sellers=new ArrayList<>();
