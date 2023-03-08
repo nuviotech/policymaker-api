@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -114,10 +115,7 @@ public class MainController {
 
 	@GetMapping("/marketplace/{category}")
 	public String searchMarketplace(@PathVariable String category) {
-
-		System.out.println("Hello i am on.. "+category);
 		Categorys categorys=categorysRepository.findByName(category);
-
 
 		ObjectMapper om=new ObjectMapper();
 		String str="Nan";
@@ -151,13 +149,13 @@ public class MainController {
 		return str;
 	}
 
-	@GetMapping("/getProductRefId/{catId}/{title}/{hsnId}")
-	public String getProductRefId(@PathVariable String catId,@PathVariable String title,@PathVariable String hsnId) {
-		String productRefId="none";
+	@GetMapping("/getProductRefId")
+	public String getProductRefId(@RequestParam("catId") String catId,@RequestParam("title") String title,@RequestParam("hsnId") String hsnId) {
+		String productRefId=null;
 		System.out.println(catId+" " +title+" "+hsnId);
 		try {
 			Product p=new Product();
-			productRefId="PRD_RF_ID_"+Helper.getRandomNumber();
+			productRefId = UUID.randomUUID().toString().replaceAll("-", "");
 			p.setProduct_ref_id(productRefId);
 			p.setCategoryId(catId);
 			p.setCreatedDateTime(new Date());
@@ -168,6 +166,7 @@ public class MainController {
 			productRefId="none";
 			e.printStackTrace();
 		}
+		System.out.println("id : "+productRefId);
 		return productRefId;
 	}
 
