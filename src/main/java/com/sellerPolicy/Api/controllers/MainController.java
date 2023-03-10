@@ -40,7 +40,6 @@ import com.sellerPolicy.Api.entity.MarketplaceSellerActivity;
 import com.sellerPolicy.Api.entity.Product;
 import com.sellerPolicy.Api.entity.ProductReviews;
 import com.sellerPolicy.Api.entity.Seller;
-import com.sellerPolicy.Api.entity.User;
 import com.sellerPolicy.Api.repo.CategorysRepository;
 import com.sellerPolicy.Api.repo.MarketPlacerRepository;
 import com.sellerPolicy.Api.repo.MarketplaceSellerActivityRepo;
@@ -75,11 +74,10 @@ public class MainController {
 	MarketplaceSellerActivityRepo marketplaceSellerActivityRepo;
 
 
-	@GetMapping("/seller/{category}")
-	public String searchSeller(@PathVariable String category) {
-
+	@GetMapping("/getSellerBycategorys")
+	public String searchSeller(@RequestParam String category) {
 		Categorys categorys=categorysRepository.findByName(category);
-
+		System.out.println("category name : "+categorys.getName());
 		ObjectMapper om=new ObjectMapper();
 		String str="Nan";
 		List<Seller> sl=new ArrayList<>();
