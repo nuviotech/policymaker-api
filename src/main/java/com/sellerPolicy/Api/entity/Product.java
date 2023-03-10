@@ -35,8 +35,6 @@ public class Product {
 	@Column(name="Description")
 	String description;
 	
-	
-	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
 	private List<ProductReviews> productReviews = new ArrayList<>();
 
