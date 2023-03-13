@@ -54,7 +54,6 @@ import ch.qos.logback.core.joran.action.Action;
 @CrossOrigin
 @RestController
 public class MainController {
-	
 
 	@Autowired
 	SellerRepository sellerRepository;
